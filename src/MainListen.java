@@ -10,7 +10,7 @@ public class MainListen extends CalculatorBaseListener {
     public Integer getResult() {
         return stack.peek();
     }
-
+    //test
     @Override
     public void exitExpression(CalculatorParser.ExpressionContext ctx) {
         if(ctx.multiplyingExpression().size() != 1){
