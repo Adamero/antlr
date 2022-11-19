@@ -2,7 +2,6 @@ import java.util.Stack;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-
 public class MainListen extends CalculatorBaseListener {
 
     private final Stack<Integer> stack = new Stack<>();
@@ -11,8 +10,25 @@ public class MainListen extends CalculatorBaseListener {
         return stack.peek();
     }
     //test
+
     @Override
     public void exitExpression(CalculatorParser.ExpressionContext ctx) {
+        if(ctx.plusExpression().size() != 1){
+            float right = stack.pop();
+            float left = stack.pop();
+            if(ctx.INTEGRAL().size() != 0){
+                //stack.push(left + right);
+                stack.push((int) Integral.BooleRule(left,right));
+            }else{
+                //stack.push(left - right);
+                stack.push((int) Integral.BooleRule(right,left));
+            }
+        }
+    }
+    //test
+
+    @Override
+    public void exitPlusExpression(CalculatorParser.PlusExpressionContext ctx) {
         if(ctx.multiplyingExpression().size() != 1){
             int right = stack.pop();
             int left = stack.pop();

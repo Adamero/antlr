@@ -1,7 +1,9 @@
 grammar Calculator;
 
 
-expression: multiplyingExpression ((PLUS | MINUS) multiplyingExpression)*;
+expression: plusExpression ((INTEGRAL) plusExpression)*;
+
+plusExpression: multiplyingExpression ((PLUS | MINUS) multiplyingExpression)*;
 
 multiplyingExpression: powExpression ((TIMES | DIV)* powExpression)*;
 
@@ -14,4 +16,5 @@ DIV: '/' ;
 PLUS: '+' ;
 MINUS: '-' ;
 POW: '^';
+INTEGRAL: 'cal';
 WS : [ \t\r\n]+ -> skip ;
