@@ -9,26 +9,9 @@ public class MainListen extends CalculatorBaseListener {
     public Integer getResult() {
         return stack.peek();
     }
-    //test
 
     @Override
     public void exitExpression(CalculatorParser.ExpressionContext ctx) {
-        if(ctx.plusExpression().size() != 1){
-            float right = stack.pop();
-            float left = stack.pop();
-            if(ctx.INTEGRAL().size() != 0){
-                //stack.push(left + right);
-                stack.push((int) Integral.BooleRule(left,right));
-            }else{
-                //stack.push(left - right);
-                stack.push((int) Integral.BooleRule(right,left));
-            }
-        }
-    }
-    //test
-
-    @Override
-    public void exitPlusExpression(CalculatorParser.PlusExpressionContext ctx) {
         if(ctx.multiplyingExpression().size() != 1){
             int right = stack.pop();
             int left = stack.pop();
@@ -53,16 +36,32 @@ public class MainListen extends CalculatorBaseListener {
         }
     }
 
+    @Override
     public void exitPowExpression(CalculatorParser.PowExpressionContext ctx) {
+        if(ctx.integralExpression().size() != 1){
+
+            double right = stack.pop();
+            double left = stack.pop();
+
+            if(ctx.POW().size() != 0){
+                stack.push((int)Math.pow(left,right));
+            }else{
+                double result = left * Math.sqrt(right);
+                stack.push((int)result);
+            }
+        }
+    }
+
+    public void exitIntegralExpression(CalculatorParser.IntegralExpressionContext ctx) {
         if(ctx.INT().size() == 1) {
             stack.push(Integer.valueOf(ctx.INT(0).getText()));
         }else{
-            double a = Double.valueOf(ctx.INT(0).getText());
-            double b = Double.valueOf(ctx.INT(1).getText());
-            if(ctx.INT().size() != 0){
-                stack.push((int)Math.pow(a,b));
-            }else {
-                stack.push((int)Math.pow(a,1.0/b));
+            float a = stack.push(Integer.valueOf(ctx.INT(0).getText()));
+            float b = stack.push(Integer.valueOf(ctx.INT(1).getText()));
+            if(ctx.INTEGRAL().size() != 0){
+                stack.push((int) Integral.BooleRule(a,b));
+            }else{
+                stack.push((int) Integral.BooleRule(b,a));
             }
         }
     }
@@ -73,7 +72,7 @@ public class MainListen extends CalculatorBaseListener {
         CharStream charStreams = CharStreams.fromFileName("D:\\java\\antlr\\src\\example.txt");
         CalculatorLexer lexer = new CalculatorLexer(charStreams);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        System.out.println(tokens.getText());
+        //System.out.println(tokens.getText());
 
         CalculatorParser parser = new CalculatorParser(tokens);
         ParseTree tree = parser.expression(); // parse

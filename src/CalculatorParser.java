@@ -16,26 +16,27 @@ public class CalculatorParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		INT=1, DOT=2, TIMES=3, DIV=4, PLUS=5, MINUS=6, POW=7, INTEGRAL=8, WS=9;
+		INT=1, DOT=2, TIMES=3, DIV=4, PLUS=5, MINUS=6, POW=7, SQRT=8, INTEGRAL=9, 
+		WS=10;
 	public static final int
-		RULE_expression = 0, RULE_plusExpression = 1, RULE_multiplyingExpression = 2, 
-		RULE_powExpression = 3;
+		RULE_expression = 0, RULE_multiplyingExpression = 1, RULE_powExpression = 2, 
+		RULE_integralExpression = 3;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"expression", "plusExpression", "multiplyingExpression", "powExpression"
+			"expression", "multiplyingExpression", "powExpression", "integralExpression"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, "'.'", "'*'", "'/'", "'+'", "'-'", "'^'", "'cal'"
+			null, null, "'.'", "'*'", "'/'", "'+'", "'-'", "'^'", "'sqrt'", "'cal'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "INT", "DOT", "TIMES", "DIV", "PLUS", "MINUS", "POW", "INTEGRAL", 
+			null, "INT", "DOT", "TIMES", "DIV", "PLUS", "MINUS", "POW", "SQRT", "INTEGRAL", 
 			"WS"
 		};
 	}
@@ -92,15 +93,19 @@ public class CalculatorParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExpressionContext extends ParserRuleContext {
-		public List<PlusExpressionContext> plusExpression() {
-			return getRuleContexts(PlusExpressionContext.class);
+		public List<MultiplyingExpressionContext> multiplyingExpression() {
+			return getRuleContexts(MultiplyingExpressionContext.class);
 		}
-		public PlusExpressionContext plusExpression(int i) {
-			return getRuleContext(PlusExpressionContext.class,i);
+		public MultiplyingExpressionContext multiplyingExpression(int i) {
+			return getRuleContext(MultiplyingExpressionContext.class,i);
 		}
-		public List<TerminalNode> INTEGRAL() { return getTokens(CalculatorParser.INTEGRAL); }
-		public TerminalNode INTEGRAL(int i) {
-			return getToken(CalculatorParser.INTEGRAL, i);
+		public List<TerminalNode> PLUS() { return getTokens(CalculatorParser.PLUS); }
+		public TerminalNode PLUS(int i) {
+			return getToken(CalculatorParser.PLUS, i);
+		}
+		public List<TerminalNode> MINUS() { return getTokens(CalculatorParser.MINUS); }
+		public TerminalNode MINUS(int i) {
+			return getToken(CalculatorParser.MINUS, i);
 		}
 		public ExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -124,84 +129,14 @@ public class CalculatorParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(8);
-			plusExpression();
-			setState(13);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (_la==INTEGRAL) {
-				{
-				{
-				{
-				setState(9);
-				match(INTEGRAL);
-				}
-				setState(10);
-				plusExpression();
-				}
-				}
-				setState(15);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			}
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	@SuppressWarnings("CheckReturnValue")
-	public static class PlusExpressionContext extends ParserRuleContext {
-		public List<MultiplyingExpressionContext> multiplyingExpression() {
-			return getRuleContexts(MultiplyingExpressionContext.class);
-		}
-		public MultiplyingExpressionContext multiplyingExpression(int i) {
-			return getRuleContext(MultiplyingExpressionContext.class,i);
-		}
-		public List<TerminalNode> PLUS() { return getTokens(CalculatorParser.PLUS); }
-		public TerminalNode PLUS(int i) {
-			return getToken(CalculatorParser.PLUS, i);
-		}
-		public List<TerminalNode> MINUS() { return getTokens(CalculatorParser.MINUS); }
-		public TerminalNode MINUS(int i) {
-			return getToken(CalculatorParser.MINUS, i);
-		}
-		public PlusExpressionContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_plusExpression; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CalculatorListener ) ((CalculatorListener)listener).enterPlusExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CalculatorListener ) ((CalculatorListener)listener).exitPlusExpression(this);
-		}
-	}
-
-	public final PlusExpressionContext plusExpression() throws RecognitionException {
-		PlusExpressionContext _localctx = new PlusExpressionContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_plusExpression);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(16);
 			multiplyingExpression();
-			setState(21);
+			setState(13);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==PLUS || _la==MINUS) {
 				{
 				{
-				setState(17);
+				setState(9);
 				_la = _input.LA(1);
 				if ( !(_la==PLUS || _la==MINUS) ) {
 				_errHandler.recoverInline(this);
@@ -211,11 +146,11 @@ public class CalculatorParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(18);
+				setState(10);
 				multiplyingExpression();
 				}
 				}
-				setState(23);
+				setState(15);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -264,26 +199,26 @@ public class CalculatorParser extends Parser {
 
 	public final MultiplyingExpressionContext multiplyingExpression() throws RecognitionException {
 		MultiplyingExpressionContext _localctx = new MultiplyingExpressionContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_multiplyingExpression);
+		enterRule(_localctx, 2, RULE_multiplyingExpression);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(24);
+			setState(16);
 			powExpression();
-			setState(34);
+			setState(26);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 26L) != 0) {
 				{
 				{
-				setState(28);
+				setState(20);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==TIMES || _la==DIV) {
 					{
 					{
-					setState(25);
+					setState(17);
 					_la = _input.LA(1);
 					if ( !(_la==TIMES || _la==DIV) ) {
 					_errHandler.recoverInline(this);
@@ -295,15 +230,15 @@ public class CalculatorParser extends Parser {
 					}
 					}
 					}
-					setState(30);
+					setState(22);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
-				setState(31);
+				setState(23);
 				powExpression();
 				}
 				}
-				setState(36);
+				setState(28);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -322,13 +257,19 @@ public class CalculatorParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class PowExpressionContext extends ParserRuleContext {
-		public List<TerminalNode> INT() { return getTokens(CalculatorParser.INT); }
-		public TerminalNode INT(int i) {
-			return getToken(CalculatorParser.INT, i);
+		public List<IntegralExpressionContext> integralExpression() {
+			return getRuleContexts(IntegralExpressionContext.class);
+		}
+		public IntegralExpressionContext integralExpression(int i) {
+			return getRuleContext(IntegralExpressionContext.class,i);
 		}
 		public List<TerminalNode> POW() { return getTokens(CalculatorParser.POW); }
 		public TerminalNode POW(int i) {
 			return getToken(CalculatorParser.POW, i);
+		}
+		public List<TerminalNode> SQRT() { return getTokens(CalculatorParser.SQRT); }
+		public TerminalNode SQRT(int i) {
+			return getToken(CalculatorParser.SQRT, i);
 		}
 		public PowExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -346,26 +287,111 @@ public class CalculatorParser extends Parser {
 
 	public final PowExpressionContext powExpression() throws RecognitionException {
 		PowExpressionContext _localctx = new PowExpressionContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_powExpression);
+		enterRule(_localctx, 4, RULE_powExpression);
+		int _la;
+		try {
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(29);
+			integralExpression();
+			setState(39);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					{
+					{
+					setState(33);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+					while (_la==POW || _la==SQRT) {
+						{
+						{
+						setState(30);
+						_la = _input.LA(1);
+						if ( !(_la==POW || _la==SQRT) ) {
+						_errHandler.recoverInline(this);
+						}
+						else {
+							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+							_errHandler.reportMatch(this);
+							consume();
+						}
+						}
+						}
+						setState(35);
+						_errHandler.sync(this);
+						_la = _input.LA(1);
+					}
+					setState(36);
+					integralExpression();
+					}
+					} 
+				}
+				setState(41);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class IntegralExpressionContext extends ParserRuleContext {
+		public List<TerminalNode> INT() { return getTokens(CalculatorParser.INT); }
+		public TerminalNode INT(int i) {
+			return getToken(CalculatorParser.INT, i);
+		}
+		public List<TerminalNode> INTEGRAL() { return getTokens(CalculatorParser.INTEGRAL); }
+		public TerminalNode INTEGRAL(int i) {
+			return getToken(CalculatorParser.INTEGRAL, i);
+		}
+		public IntegralExpressionContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_integralExpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof CalculatorListener ) ((CalculatorListener)listener).enterIntegralExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof CalculatorListener ) ((CalculatorListener)listener).exitIntegralExpression(this);
+		}
+	}
+
+	public final IntegralExpressionContext integralExpression() throws RecognitionException {
+		IntegralExpressionContext _localctx = new IntegralExpressionContext(_ctx, getState());
+		enterRule(_localctx, 6, RULE_integralExpression);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(37);
-			match(INT);
 			setState(42);
+			match(INT);
+			setState(47);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==POW) {
+			while (_la==INTEGRAL) {
 				{
 				{
-				setState(38);
-				match(POW);
-				setState(39);
+				setState(43);
+				match(INTEGRAL);
+				setState(44);
 				match(INT);
 				}
 				}
-				setState(44);
+				setState(49);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -383,36 +409,39 @@ public class CalculatorParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\t.\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\n3\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0001\u0000\u0001\u0000\u0001"+
 		"\u0000\u0005\u0000\f\b\u0000\n\u0000\f\u0000\u000f\t\u0000\u0001\u0001"+
-		"\u0001\u0001\u0001\u0001\u0005\u0001\u0014\b\u0001\n\u0001\f\u0001\u0017"+
-		"\t\u0001\u0001\u0002\u0001\u0002\u0005\u0002\u001b\b\u0002\n\u0002\f\u0002"+
-		"\u001e\t\u0002\u0001\u0002\u0005\u0002!\b\u0002\n\u0002\f\u0002$\t\u0002"+
-		"\u0001\u0003\u0001\u0003\u0001\u0003\u0005\u0003)\b\u0003\n\u0003\f\u0003"+
-		",\t\u0003\u0001\u0003\u0000\u0000\u0004\u0000\u0002\u0004\u0006\u0000"+
-		"\u0002\u0001\u0000\u0005\u0006\u0001\u0000\u0003\u0004.\u0000\b\u0001"+
-		"\u0000\u0000\u0000\u0002\u0010\u0001\u0000\u0000\u0000\u0004\u0018\u0001"+
-		"\u0000\u0000\u0000\u0006%\u0001\u0000\u0000\u0000\b\r\u0003\u0002\u0001"+
-		"\u0000\t\n\u0005\b\u0000\u0000\n\f\u0003\u0002\u0001\u0000\u000b\t\u0001"+
+		"\u0001\u0001\u0005\u0001\u0013\b\u0001\n\u0001\f\u0001\u0016\t\u0001\u0001"+
+		"\u0001\u0005\u0001\u0019\b\u0001\n\u0001\f\u0001\u001c\t\u0001\u0001\u0002"+
+		"\u0001\u0002\u0005\u0002 \b\u0002\n\u0002\f\u0002#\t\u0002\u0001\u0002"+
+		"\u0005\u0002&\b\u0002\n\u0002\f\u0002)\t\u0002\u0001\u0003\u0001\u0003"+
+		"\u0001\u0003\u0005\u0003.\b\u0003\n\u0003\f\u00031\t\u0003\u0001\u0003"+
+		"\u0000\u0000\u0004\u0000\u0002\u0004\u0006\u0000\u0003\u0001\u0000\u0005"+
+		"\u0006\u0001\u0000\u0003\u0004\u0001\u0000\u0007\b4\u0000\b\u0001\u0000"+
+		"\u0000\u0000\u0002\u0010\u0001\u0000\u0000\u0000\u0004\u001d\u0001\u0000"+
+		"\u0000\u0000\u0006*\u0001\u0000\u0000\u0000\b\r\u0003\u0002\u0001\u0000"+
+		"\t\n\u0007\u0000\u0000\u0000\n\f\u0003\u0002\u0001\u0000\u000b\t\u0001"+
 		"\u0000\u0000\u0000\f\u000f\u0001\u0000\u0000\u0000\r\u000b\u0001\u0000"+
 		"\u0000\u0000\r\u000e\u0001\u0000\u0000\u0000\u000e\u0001\u0001\u0000\u0000"+
-		"\u0000\u000f\r\u0001\u0000\u0000\u0000\u0010\u0015\u0003\u0004\u0002\u0000"+
-		"\u0011\u0012\u0007\u0000\u0000\u0000\u0012\u0014\u0003\u0004\u0002\u0000"+
-		"\u0013\u0011\u0001\u0000\u0000\u0000\u0014\u0017\u0001\u0000\u0000\u0000"+
-		"\u0015\u0013\u0001\u0000\u0000\u0000\u0015\u0016\u0001\u0000\u0000\u0000"+
-		"\u0016\u0003\u0001\u0000\u0000\u0000\u0017\u0015\u0001\u0000\u0000\u0000"+
-		"\u0018\"\u0003\u0006\u0003\u0000\u0019\u001b\u0007\u0001\u0000\u0000\u001a"+
-		"\u0019\u0001\u0000\u0000\u0000\u001b\u001e\u0001\u0000\u0000\u0000\u001c"+
-		"\u001a\u0001\u0000\u0000\u0000\u001c\u001d\u0001\u0000\u0000\u0000\u001d"+
-		"\u001f\u0001\u0000\u0000\u0000\u001e\u001c\u0001\u0000\u0000\u0000\u001f"+
-		"!\u0003\u0006\u0003\u0000 \u001c\u0001\u0000\u0000\u0000!$\u0001\u0000"+
-		"\u0000\u0000\" \u0001\u0000\u0000\u0000\"#\u0001\u0000\u0000\u0000#\u0005"+
-		"\u0001\u0000\u0000\u0000$\"\u0001\u0000\u0000\u0000%*\u0005\u0001\u0000"+
-		"\u0000&\'\u0005\u0007\u0000\u0000\')\u0005\u0001\u0000\u0000(&\u0001\u0000"+
-		"\u0000\u0000),\u0001\u0000\u0000\u0000*(\u0001\u0000\u0000\u0000*+\u0001"+
-		"\u0000\u0000\u0000+\u0007\u0001\u0000\u0000\u0000,*\u0001\u0000\u0000"+
-		"\u0000\u0005\r\u0015\u001c\"*";
+		"\u0000\u000f\r\u0001\u0000\u0000\u0000\u0010\u001a\u0003\u0004\u0002\u0000"+
+		"\u0011\u0013\u0007\u0001\u0000\u0000\u0012\u0011\u0001\u0000\u0000\u0000"+
+		"\u0013\u0016\u0001\u0000\u0000\u0000\u0014\u0012\u0001\u0000\u0000\u0000"+
+		"\u0014\u0015\u0001\u0000\u0000\u0000\u0015\u0017\u0001\u0000\u0000\u0000"+
+		"\u0016\u0014\u0001\u0000\u0000\u0000\u0017\u0019\u0003\u0004\u0002\u0000"+
+		"\u0018\u0014\u0001\u0000\u0000\u0000\u0019\u001c\u0001\u0000\u0000\u0000"+
+		"\u001a\u0018\u0001\u0000\u0000\u0000\u001a\u001b\u0001\u0000\u0000\u0000"+
+		"\u001b\u0003\u0001\u0000\u0000\u0000\u001c\u001a\u0001\u0000\u0000\u0000"+
+		"\u001d\'\u0003\u0006\u0003\u0000\u001e \u0007\u0002\u0000\u0000\u001f"+
+		"\u001e\u0001\u0000\u0000\u0000 #\u0001\u0000\u0000\u0000!\u001f\u0001"+
+		"\u0000\u0000\u0000!\"\u0001\u0000\u0000\u0000\"$\u0001\u0000\u0000\u0000"+
+		"#!\u0001\u0000\u0000\u0000$&\u0003\u0006\u0003\u0000%!\u0001\u0000\u0000"+
+		"\u0000&)\u0001\u0000\u0000\u0000\'%\u0001\u0000\u0000\u0000\'(\u0001\u0000"+
+		"\u0000\u0000(\u0005\u0001\u0000\u0000\u0000)\'\u0001\u0000\u0000\u0000"+
+		"*/\u0005\u0001\u0000\u0000+,\u0005\t\u0000\u0000,.\u0005\u0001\u0000\u0000"+
+		"-+\u0001\u0000\u0000\u0000.1\u0001\u0000\u0000\u0000/-\u0001\u0000\u0000"+
+		"\u0000/0\u0001\u0000\u0000\u00000\u0007\u0001\u0000\u0000\u00001/\u0001"+
+		"\u0000\u0000\u0000\u0006\r\u0014\u001a!\'/";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

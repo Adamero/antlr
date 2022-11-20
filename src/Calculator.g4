@@ -1,13 +1,10 @@
 grammar Calculator;
 
-
-expression: plusExpression ((INTEGRAL) plusExpression)*;
-
-plusExpression: multiplyingExpression ((PLUS | MINUS) multiplyingExpression)*;
-
+expression: multiplyingExpression ((PLUS | MINUS) multiplyingExpression)*;
 multiplyingExpression: powExpression ((TIMES | DIV)* powExpression)*;
+powExpression: integralExpression ((POW | SQRT)* integralExpression)*;
+integralExpression: INT (INTEGRAL INT)*;
 
-powExpression: INT (POW INT)*;
 
 INT: [0-9]+ ;
 DOT: '.';
@@ -16,5 +13,6 @@ DIV: '/' ;
 PLUS: '+' ;
 MINUS: '-' ;
 POW: '^';
+SQRT: 'sqrt';
 INTEGRAL: 'cal';
 WS : [ \t\r\n]+ -> skip ;
