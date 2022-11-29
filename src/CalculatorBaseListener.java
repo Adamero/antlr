@@ -40,13 +40,13 @@ public class CalculatorBaseListener implements CalculatorListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPowExpression(CalculatorParser.PowExpressionContext ctx) { }
+	@Override public void enterPowerExpression(CalculatorParser.PowerExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPowExpression(CalculatorParser.PowExpressionContext ctx) { }
+	@Override public void exitPowerExpression(CalculatorParser.PowerExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

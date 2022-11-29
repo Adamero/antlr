@@ -27,15 +27,15 @@ public interface CalculatorListener extends ParseTreeListener {
 	 */
 	void exitMultiplyingExpression(CalculatorParser.MultiplyingExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link CalculatorParser#powExpression}.
+	 * Enter a parse tree produced by {@link CalculatorParser#powerExpression}.
 	 * @param ctx the parse tree
 	 */
-	void enterPowExpression(CalculatorParser.PowExpressionContext ctx);
+	void enterPowerExpression(CalculatorParser.PowerExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link CalculatorParser#powExpression}.
+	 * Exit a parse tree produced by {@link CalculatorParser#powerExpression}.
 	 * @param ctx the parse tree
 	 */
-	void exitPowExpression(CalculatorParser.PowExpressionContext ctx);
+	void exitPowerExpression(CalculatorParser.PowerExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link CalculatorParser#integralExpression}.
 	 * @param ctx the parse tree

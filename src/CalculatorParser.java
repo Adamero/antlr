@@ -16,28 +16,29 @@ public class CalculatorParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		INT=1, DOT=2, TIMES=3, DIV=4, PLUS=5, MINUS=6, POW=7, SQRT=8, INTEGRAL=9, 
-		WS=10;
+		INT=1, DOUBLE=2, POW=3, SQRT=4, LOG=5, TIMES=6, DIV=7, PLUS=8, MINUS=9, 
+		MIN=10, MAX=11, INTEGRAL=12, LPAREN=13, RPAREN=14, WS=15;
 	public static final int
-		RULE_expression = 0, RULE_multiplyingExpression = 1, RULE_powExpression = 2, 
+		RULE_expression = 0, RULE_multiplyingExpression = 1, RULE_powerExpression = 2, 
 		RULE_integralExpression = 3;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"expression", "multiplyingExpression", "powExpression", "integralExpression"
+			"expression", "multiplyingExpression", "powerExpression", "integralExpression"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, "'.'", "'*'", "'/'", "'+'", "'-'", "'^'", "'sqrt'", "'cal'"
+			null, null, null, "'^'", "'sqrt'", "'log'", "'*'", "'/'", "'+'", "'-'", 
+			"'MIN'", "'MAX'", "'cal'", "'('", "')'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "INT", "DOT", "TIMES", "DIV", "PLUS", "MINUS", "POW", "SQRT", "INTEGRAL", 
-			"WS"
+			null, "INT", "DOUBLE", "POW", "SQRT", "LOG", "TIMES", "DIV", "PLUS", 
+			"MINUS", "MIN", "MAX", "INTEGRAL", "LPAREN", "RPAREN", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -169,11 +170,11 @@ public class CalculatorParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class MultiplyingExpressionContext extends ParserRuleContext {
-		public List<PowExpressionContext> powExpression() {
-			return getRuleContexts(PowExpressionContext.class);
+		public List<PowerExpressionContext> powerExpression() {
+			return getRuleContexts(PowerExpressionContext.class);
 		}
-		public PowExpressionContext powExpression(int i) {
-			return getRuleContext(PowExpressionContext.class,i);
+		public PowerExpressionContext powerExpression(int i) {
+			return getRuleContext(PowerExpressionContext.class,i);
 		}
 		public List<TerminalNode> TIMES() { return getTokens(CalculatorParser.TIMES); }
 		public TerminalNode TIMES(int i) {
@@ -205,40 +206,28 @@ public class CalculatorParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(16);
-			powExpression();
-			setState(26);
+			powerExpression();
+			setState(21);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 26L) != 0) {
+			while (_la==TIMES || _la==DIV) {
 				{
 				{
-				setState(20);
-				_errHandler.sync(this);
+				setState(17);
 				_la = _input.LA(1);
-				while (_la==TIMES || _la==DIV) {
-					{
-					{
-					setState(17);
-					_la = _input.LA(1);
-					if ( !(_la==TIMES || _la==DIV) ) {
-					_errHandler.recoverInline(this);
-					}
-					else {
-						if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-						_errHandler.reportMatch(this);
-						consume();
-					}
-					}
-					}
-					setState(22);
-					_errHandler.sync(this);
-					_la = _input.LA(1);
+				if ( !(_la==TIMES || _la==DIV) ) {
+				_errHandler.recoverInline(this);
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
+					consume();
+				}
+				setState(18);
+				powerExpression();
+				}
 				}
 				setState(23);
-				powExpression();
-				}
-				}
-				setState(28);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -256,7 +245,7 @@ public class CalculatorParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class PowExpressionContext extends ParserRuleContext {
+	public static class PowerExpressionContext extends ParserRuleContext {
 		public List<IntegralExpressionContext> integralExpression() {
 			return getRuleContexts(IntegralExpressionContext.class);
 		}
@@ -271,67 +260,64 @@ public class CalculatorParser extends Parser {
 		public TerminalNode SQRT(int i) {
 			return getToken(CalculatorParser.SQRT, i);
 		}
-		public PowExpressionContext(ParserRuleContext parent, int invokingState) {
+		public List<TerminalNode> LOG() { return getTokens(CalculatorParser.LOG); }
+		public TerminalNode LOG(int i) {
+			return getToken(CalculatorParser.LOG, i);
+		}
+		public List<TerminalNode> MAX() { return getTokens(CalculatorParser.MAX); }
+		public TerminalNode MAX(int i) {
+			return getToken(CalculatorParser.MAX, i);
+		}
+		public List<TerminalNode> MIN() { return getTokens(CalculatorParser.MIN); }
+		public TerminalNode MIN(int i) {
+			return getToken(CalculatorParser.MIN, i);
+		}
+		public PowerExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_powExpression; }
+		@Override public int getRuleIndex() { return RULE_powerExpression; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof CalculatorListener ) ((CalculatorListener)listener).enterPowExpression(this);
+			if ( listener instanceof CalculatorListener ) ((CalculatorListener)listener).enterPowerExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof CalculatorListener ) ((CalculatorListener)listener).exitPowExpression(this);
+			if ( listener instanceof CalculatorListener ) ((CalculatorListener)listener).exitPowerExpression(this);
 		}
 	}
 
-	public final PowExpressionContext powExpression() throws RecognitionException {
-		PowExpressionContext _localctx = new PowExpressionContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_powExpression);
+	public final PowerExpressionContext powerExpression() throws RecognitionException {
+		PowerExpressionContext _localctx = new PowerExpressionContext(_ctx, getState());
+		enterRule(_localctx, 4, RULE_powerExpression);
 		int _la;
 		try {
-			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(29);
+			setState(24);
 			integralExpression();
-			setState(39);
+			setState(29);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					{
-					{
-					setState(33);
-					_errHandler.sync(this);
-					_la = _input.LA(1);
-					while (_la==POW || _la==SQRT) {
-						{
-						{
-						setState(30);
-						_la = _input.LA(1);
-						if ( !(_la==POW || _la==SQRT) ) {
-						_errHandler.recoverInline(this);
-						}
-						else {
-							if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-							_errHandler.reportMatch(this);
-							consume();
-						}
-						}
-						}
-						setState(35);
-						_errHandler.sync(this);
-						_la = _input.LA(1);
-					}
-					setState(36);
-					integralExpression();
-					}
-					} 
+			_la = _input.LA(1);
+			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 3128L) != 0) {
+				{
+				{
+				setState(25);
+				_la = _input.LA(1);
+				if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 3128L) != 0) ) {
+				_errHandler.recoverInline(this);
 				}
-				setState(41);
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
+					consume();
+				}
+				setState(26);
+				integralExpression();
+				}
+				}
+				setState(31);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+				_la = _input.LA(1);
 			}
 			}
 		}
@@ -348,14 +334,14 @@ public class CalculatorParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class IntegralExpressionContext extends ParserRuleContext {
-		public List<TerminalNode> INT() { return getTokens(CalculatorParser.INT); }
-		public TerminalNode INT(int i) {
-			return getToken(CalculatorParser.INT, i);
+		public TerminalNode MINUS() { return getToken(CalculatorParser.MINUS, 0); }
+		public TerminalNode INT() { return getToken(CalculatorParser.INT, 0); }
+		public TerminalNode DOUBLE() { return getToken(CalculatorParser.DOUBLE, 0); }
+		public TerminalNode LPAREN() { return getToken(CalculatorParser.LPAREN, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
 		}
-		public List<TerminalNode> INTEGRAL() { return getTokens(CalculatorParser.INTEGRAL); }
-		public TerminalNode INTEGRAL(int i) {
-			return getToken(CalculatorParser.INTEGRAL, i);
-		}
+		public TerminalNode RPAREN() { return getToken(CalculatorParser.RPAREN, 0); }
 		public IntegralExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -375,26 +361,55 @@ public class CalculatorParser extends Parser {
 		enterRule(_localctx, 6, RULE_integralExpression);
 		int _la;
 		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(42);
-			match(INT);
-			setState(47);
+			setState(39);
 			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (_la==INTEGRAL) {
+			switch (_input.LA(1)) {
+			case MINUS:
+				enterOuterAlt(_localctx, 1);
 				{
-				{
-				setState(43);
-				match(INTEGRAL);
-				setState(44);
-				match(INT);
-				}
-				}
-				setState(49);
-				_errHandler.sync(this);
+				setState(32);
+				match(MINUS);
+				setState(33);
 				_la = _input.LA(1);
-			}
+				if ( !(_la==INT || _la==DOUBLE) ) {
+				_errHandler.recoverInline(this);
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
+					consume();
+				}
+				}
+				break;
+			case INT:
+			case DOUBLE:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(34);
+				_la = _input.LA(1);
+				if ( !(_la==INT || _la==DOUBLE) ) {
+				_errHandler.recoverInline(this);
+				}
+				else {
+					if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+					_errHandler.reportMatch(this);
+					consume();
+				}
+				}
+				break;
+			case LPAREN:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(35);
+				match(LPAREN);
+				setState(36);
+				expression();
+				setState(37);
+				match(RPAREN);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -409,39 +424,35 @@ public class CalculatorParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\n3\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u000f*\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0001\u0000\u0001\u0000\u0001"+
 		"\u0000\u0005\u0000\f\b\u0000\n\u0000\f\u0000\u000f\t\u0000\u0001\u0001"+
-		"\u0001\u0001\u0005\u0001\u0013\b\u0001\n\u0001\f\u0001\u0016\t\u0001\u0001"+
-		"\u0001\u0005\u0001\u0019\b\u0001\n\u0001\f\u0001\u001c\t\u0001\u0001\u0002"+
-		"\u0001\u0002\u0005\u0002 \b\u0002\n\u0002\f\u0002#\t\u0002\u0001\u0002"+
-		"\u0005\u0002&\b\u0002\n\u0002\f\u0002)\t\u0002\u0001\u0003\u0001\u0003"+
-		"\u0001\u0003\u0005\u0003.\b\u0003\n\u0003\f\u00031\t\u0003\u0001\u0003"+
-		"\u0000\u0000\u0004\u0000\u0002\u0004\u0006\u0000\u0003\u0001\u0000\u0005"+
-		"\u0006\u0001\u0000\u0003\u0004\u0001\u0000\u0007\b4\u0000\b\u0001\u0000"+
-		"\u0000\u0000\u0002\u0010\u0001\u0000\u0000\u0000\u0004\u001d\u0001\u0000"+
-		"\u0000\u0000\u0006*\u0001\u0000\u0000\u0000\b\r\u0003\u0002\u0001\u0000"+
-		"\t\n\u0007\u0000\u0000\u0000\n\f\u0003\u0002\u0001\u0000\u000b\t\u0001"+
-		"\u0000\u0000\u0000\f\u000f\u0001\u0000\u0000\u0000\r\u000b\u0001\u0000"+
-		"\u0000\u0000\r\u000e\u0001\u0000\u0000\u0000\u000e\u0001\u0001\u0000\u0000"+
-		"\u0000\u000f\r\u0001\u0000\u0000\u0000\u0010\u001a\u0003\u0004\u0002\u0000"+
-		"\u0011\u0013\u0007\u0001\u0000\u0000\u0012\u0011\u0001\u0000\u0000\u0000"+
-		"\u0013\u0016\u0001\u0000\u0000\u0000\u0014\u0012\u0001\u0000\u0000\u0000"+
-		"\u0014\u0015\u0001\u0000\u0000\u0000\u0015\u0017\u0001\u0000\u0000\u0000"+
-		"\u0016\u0014\u0001\u0000\u0000\u0000\u0017\u0019\u0003\u0004\u0002\u0000"+
-		"\u0018\u0014\u0001\u0000\u0000\u0000\u0019\u001c\u0001\u0000\u0000\u0000"+
-		"\u001a\u0018\u0001\u0000\u0000\u0000\u001a\u001b\u0001\u0000\u0000\u0000"+
-		"\u001b\u0003\u0001\u0000\u0000\u0000\u001c\u001a\u0001\u0000\u0000\u0000"+
-		"\u001d\'\u0003\u0006\u0003\u0000\u001e \u0007\u0002\u0000\u0000\u001f"+
-		"\u001e\u0001\u0000\u0000\u0000 #\u0001\u0000\u0000\u0000!\u001f\u0001"+
-		"\u0000\u0000\u0000!\"\u0001\u0000\u0000\u0000\"$\u0001\u0000\u0000\u0000"+
-		"#!\u0001\u0000\u0000\u0000$&\u0003\u0006\u0003\u0000%!\u0001\u0000\u0000"+
-		"\u0000&)\u0001\u0000\u0000\u0000\'%\u0001\u0000\u0000\u0000\'(\u0001\u0000"+
-		"\u0000\u0000(\u0005\u0001\u0000\u0000\u0000)\'\u0001\u0000\u0000\u0000"+
-		"*/\u0005\u0001\u0000\u0000+,\u0005\t\u0000\u0000,.\u0005\u0001\u0000\u0000"+
-		"-+\u0001\u0000\u0000\u0000.1\u0001\u0000\u0000\u0000/-\u0001\u0000\u0000"+
-		"\u0000/0\u0001\u0000\u0000\u00000\u0007\u0001\u0000\u0000\u00001/\u0001"+
-		"\u0000\u0000\u0000\u0006\r\u0014\u001a!\'/";
+		"\u0001\u0001\u0001\u0001\u0005\u0001\u0014\b\u0001\n\u0001\f\u0001\u0017"+
+		"\t\u0001\u0001\u0002\u0001\u0002\u0001\u0002\u0005\u0002\u001c\b\u0002"+
+		"\n\u0002\f\u0002\u001f\t\u0002\u0001\u0003\u0001\u0003\u0001\u0003\u0001"+
+		"\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0003\u0003(\b\u0003\u0001"+
+		"\u0003\u0000\u0000\u0004\u0000\u0002\u0004\u0006\u0000\u0004\u0001\u0000"+
+		"\b\t\u0001\u0000\u0006\u0007\u0002\u0000\u0003\u0005\n\u000b\u0001\u0000"+
+		"\u0001\u0002*\u0000\b\u0001\u0000\u0000\u0000\u0002\u0010\u0001\u0000"+
+		"\u0000\u0000\u0004\u0018\u0001\u0000\u0000\u0000\u0006\'\u0001\u0000\u0000"+
+		"\u0000\b\r\u0003\u0002\u0001\u0000\t\n\u0007\u0000\u0000\u0000\n\f\u0003"+
+		"\u0002\u0001\u0000\u000b\t\u0001\u0000\u0000\u0000\f\u000f\u0001\u0000"+
+		"\u0000\u0000\r\u000b\u0001\u0000\u0000\u0000\r\u000e\u0001\u0000\u0000"+
+		"\u0000\u000e\u0001\u0001\u0000\u0000\u0000\u000f\r\u0001\u0000\u0000\u0000"+
+		"\u0010\u0015\u0003\u0004\u0002\u0000\u0011\u0012\u0007\u0001\u0000\u0000"+
+		"\u0012\u0014\u0003\u0004\u0002\u0000\u0013\u0011\u0001\u0000\u0000\u0000"+
+		"\u0014\u0017\u0001\u0000\u0000\u0000\u0015\u0013\u0001\u0000\u0000\u0000"+
+		"\u0015\u0016\u0001\u0000\u0000\u0000\u0016\u0003\u0001\u0000\u0000\u0000"+
+		"\u0017\u0015\u0001\u0000\u0000\u0000\u0018\u001d\u0003\u0006\u0003\u0000"+
+		"\u0019\u001a\u0007\u0002\u0000\u0000\u001a\u001c\u0003\u0006\u0003\u0000"+
+		"\u001b\u0019\u0001\u0000\u0000\u0000\u001c\u001f\u0001\u0000\u0000\u0000"+
+		"\u001d\u001b\u0001\u0000\u0000\u0000\u001d\u001e\u0001\u0000\u0000\u0000"+
+		"\u001e\u0005\u0001\u0000\u0000\u0000\u001f\u001d\u0001\u0000\u0000\u0000"+
+		" !\u0005\t\u0000\u0000!(\u0007\u0003\u0000\u0000\"(\u0007\u0003\u0000"+
+		"\u0000#$\u0005\r\u0000\u0000$%\u0003\u0000\u0000\u0000%&\u0005\u000e\u0000"+
+		"\u0000&(\u0001\u0000\u0000\u0000\' \u0001\u0000\u0000\u0000\'\"\u0001"+
+		"\u0000\u0000\u0000\'#\u0001\u0000\u0000\u0000(\u0007\u0001\u0000\u0000"+
+		"\u0000\u0004\r\u0015\u001d\'";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
